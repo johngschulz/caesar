@@ -18,39 +18,19 @@ import webapp2
 import cgi
 from helpers import alphabet_position, rotate_character
 
-# html boilerplate for the top of every page
-page_header = """
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Formation</title>
-    <style type="text/css">
-        .error {
-            color: red;
-        }
-    </style>
-</head>
-<body>
-    <h1>
-        <a href="/">Formation</a>
-    </h1>
-"""
-# html boilerplate for the bottom of every page
-page_footer = """
-</body>
-</html>
-"""
 #forms for rotation encryption and text
 rot_form = """
     <form method="post">
         <label>
-            Rotate text amount:
+            Rotate amount:
+        <br>
             <input type="text" name="rotation" value="%(rotation)s">
         <br>
+        </label>
         <label>
             Input text to rotate:
         <br>
-            <input textarea name="text" value="%(text)s" style="height: 100px; width: 400px;"></textarea>
+            <input name="text" value="%(text)s">
         </label>
             <input type="submit" value="Rot It"/>
         <div style="color:red">%(error)s</div>
@@ -72,8 +52,8 @@ class MainHandler(webapp2.RequestHandler):
         self.write_form()
 
     def post(self):
-        user_rot = self.request.get("rotation")
-        user_text = self.request.get("text")
+        user_rot = self.request.get(cgi.escape("rotation"))
+        user_text = self.request.get(cgi.escape("text"))
         text = encrypt(user_text, user_rot)
         self.write_form("",user_rot,text)
 
